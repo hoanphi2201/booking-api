@@ -22,3 +22,5 @@ bin/
 #requirements.txt
 
 htmlcov/
+
+migrations/

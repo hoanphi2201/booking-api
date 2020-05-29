@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy import func, asc, desc, or_
+from datetime import datetime
 
 from main.models import db
 from main.models import Hotel
@@ -17,6 +18,7 @@ class HotelRepository:
 
     @staticmethod
     def create(hotel_params: dict) -> Hotel:
+        hotel_params['created_at'] = datetime.now()
         hotel = Hotel(**hotel_params)
         db.session.add(hotel)
         db.session.commit()
@@ -87,3 +89,7 @@ class HotelRepository:
             'page': temp.get('page'),
             'page_size': temp.get('page_size')
         }
+
+    @staticmethod
+    def get_all_payment_information(hotel_id):
+        return Hotel.query.filter(id=hotel_id).first().payment_informations

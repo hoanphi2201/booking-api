@@ -5,10 +5,12 @@ from main.helpers.validators.validate import (
     ValidateNumbersOnly,
     ValidateList,
     ValidateEmail,
-    ValidateRange
+    ValidateRange,
+    ValidateEnum
 )
 from main.helpers.utils.camel_key_mapping import HotelCamelKey
 from main.helpers.utils.string import StringUtils
+from main.models.enums import Bank
 from .base import (
     BaseRequestSchema,
     BaseResponseSchema
@@ -159,3 +161,19 @@ class HotelsSearchRequestSchema(BaseRequestSchema):
 class HotelsSearchResponseSchema(BaseResponseSchema):
     total = Integer(required=True)
     hotels = Nested(HotelSchema(many=True))
+
+
+class HotelPaymentInformationCreateRequestSchema(BaseRequestSchema):
+    bank_code = String(data_key=HotelCamelKey.mapping['bank_code'], required=True, validate=[
+        ValidateEnum(Bank)
+    ])
+
+    hotel_id = Integer(data_key=HotelCamelKey.mapping['hotel_id'], required=True)
+
+    account_number = String(data_key=HotelCamelKey.mapping['account_number'], required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    account_name = String(data_key=HotelCamelKey.mapping['account_name'], required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
