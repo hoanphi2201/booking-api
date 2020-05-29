@@ -28,7 +28,11 @@ class HotelCamelKey(BaseCamelKey):
         'tax_deluxe': 'taxDeluxe',
         'image_deluxe': 'imageDeluxe',
         'created_at': 'createdAt',
-        'updated_at': 'updatedAt'
+        'updated_at': 'updatedAt',
+        'bank_code': 'bankCode',
+        'hotel_id': 'hotelId',
+        'account_number': 'accountNumber',
+        'account_name': 'accountName'
     }
 
 

@@ -8,7 +8,7 @@ from .schemas.hotel import (
     HotelsGetRequestSchema,
     HotelsGetResponseSchema,
     HotelsSearchRequestSchema,
-    HotelsSearchResponseSchema
+    HotelsSearchResponseSchema,
 )
 from .schemas.base import IdOnlySchema
 from main.services.hotel import HotelsService

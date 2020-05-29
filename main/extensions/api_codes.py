@@ -51,6 +51,8 @@ class APICode(str, Enum):
 
     TERMINAL_WAREHOUSE_NOT_FOUND = ("SA010E", "The requested terminal mapped with warehouse can not be found")
 
+    HOTEL_BOOKING_NOT_FOUND = ("SA011E", "The requested hotel booking can not be found")
+
     TERMINAL_ALREADY_ACTIVE = ("SA031E", "The requested terminal has already active")
     
     TERMINAL_ALREADY_INACTIVE = ("SA032E", "The requested terminal has already inactive")

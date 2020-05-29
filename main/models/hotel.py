@@ -27,6 +27,16 @@ class Hotel(db.Model, TimestampMixin, IDMixin):
     available_room_deluxe = db.Column(db.INTEGER, nullable=True)
     tax_deluxe = db.Column(db.FLOAT, nullable=True)
     image_deluxe = db.Column(db.VARCHAR(255), nullable=True)
+
+    payment_informations = db.relationship(
+        'PaymentInformation',
+        back_populates='hotel'
+    )
+
+    hotel_bookings = db.relationship(
+        'HotelBooking',
+        back_populates='hotel'
+    )
     
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

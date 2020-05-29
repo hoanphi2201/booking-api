@@ -29,3 +29,15 @@ class HotelValidator:
             raise ValidationError(field_name=field_name, message=ValidateErrorCode.IS_UNIQUE)
 
         return hotel
+
+    @staticmethod
+    def validate_non_existence(field_name: str = None, **kwargs):
+        hotel = HotelRepository.get_by(**kwargs)
+
+        if hotel is None:
+            key, value = next(iter(kwargs.items()))
+            field_name = field_name if field_name else key
+
+            raise ValidationError(field_name=field_name, message=ValidateErrorCode.NOT_EXIST)
+
+        return hotel
