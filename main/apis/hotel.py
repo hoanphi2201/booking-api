@@ -9,9 +9,12 @@ from .schemas.hotel import (
     HotelsGetResponseSchema,
     HotelsSearchRequestSchema,
     HotelsSearchResponseSchema,
+    HotelPaymentInformationsResponseSchema,
+    HotelResponseSchema
 )
 from .schemas.base import IdOnlySchema
 from main.services.hotel import HotelsService
+from main.services.payment_information import PaymentInformationsService
 
 api = Namespace('Hotels')
 
@@ -38,6 +41,15 @@ class Hotels(Resource):
         return HotelsService.get_all_by(request.parse_args)
 
 
+@api.route('/<int:hotel_id>', methods=['GET'])
+class Hotel(Resource):
+    @responds(schema=HotelResponseSchema)
+    def get(self, hotel_id):
+        return {
+            'hotel': HotelsService.get_by(hotel_id=hotel_id)
+        }
+
+
 @api.route('/search', methods=['GET'])
 class HotelsSearch(Resource):
     @accepts(schema=HotelsSearchRequestSchema, has_request_params=True)
@@ -45,3 +57,12 @@ class HotelsSearch(Resource):
     def get(self):
         params = request.parse_args
         return HotelsService.get_all_by(request.parse_args, paginate=False)
+
+
+@api.route('/<int:hotel_id>/payment/get-all', methods=['GET'])
+class HotelPaymentInformations(Resource):
+    @responds(schema=HotelPaymentInformationsResponseSchema)
+    def get(self, hotel_id):
+        return {
+            'payment_informations': HotelsService.get_all_payment_information(hotel_id)
+        }

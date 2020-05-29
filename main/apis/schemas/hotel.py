@@ -143,6 +143,10 @@ class HotelSchema(Schema):
         return room_types
 
 
+class HotelResponseSchema(BaseResponseSchema):
+    hotel = Nested(HotelSchema)
+
+
 class HotelsGetResponseSchema(BaseResponseSchema):
     page = Integer(required=True)
     page_size = Integer(data_key='pageSize', required=True, validate=[
@@ -177,3 +181,15 @@ class HotelPaymentInformationCreateRequestSchema(BaseRequestSchema):
     account_name = String(data_key=HotelCamelKey.mapping['account_name'], required=False, validate=[
         ValidateLength(min=1, max=255)
     ])
+
+
+
+class HotelPaymentInformationSchema(Schema):
+    id = Integer()
+    bank_code = String(data_key=HotelCamelKey.mapping['bank_code'])
+    account_number = String(data_key=HotelCamelKey.mapping['account_number'])
+    account_name = String(data_key=HotelCamelKey.mapping['account_name'])    
+
+
+class HotelPaymentInformationsResponseSchema(BaseResponseSchema):
+    payment_informations = Nested(HotelPaymentInformationSchema(many=True))

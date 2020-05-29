@@ -53,6 +53,8 @@ class APICode(str, Enum):
 
     HOTEL_BOOKING_NOT_FOUND = ("SA011E", "The requested hotel booking can not be found")
 
+    HOTEL_NOT_FOUND = ("SA012E", "The requested hotel can not be found")
+
     TERMINAL_ALREADY_ACTIVE = ("SA031E", "The requested terminal has already active")
     
     TERMINAL_ALREADY_INACTIVE = ("SA032E", "The requested terminal has already inactive")
