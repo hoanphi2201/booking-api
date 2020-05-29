@@ -90,6 +90,3 @@ class HotelRepository:
             'page_size': temp.get('page_size')
         }
 
-    @staticmethod
-    def get_all_payment_information(hotel_id):
-        return Hotel.query.filter(id=hotel_id).first().payment_informations

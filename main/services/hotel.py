@@ -5,8 +5,17 @@ from .schemas.hotel import (
     HotelCreate,
 )
 from main.helpers.decorators.accepts_logic import accepts_logic
+from main.extensions.exceptions.hotel import HotelNotFoundException
 
 class HotelsService:
+    @staticmethod
+    def get_by(hotel_id):
+        hotel = HotelRepository.get_by(id=hotel_id)
+        if hotel is None:
+            raise HotelNotFoundException
+        return hotel
+
+
     @staticmethod
     def create(payload: dict) -> Hotel:
         payload = accepts_logic(payload=payload, schema=HotelCreate)
@@ -28,3 +37,10 @@ class HotelsService:
             'page': result.get('page'),
             'page_size': result.get('page_size')
         }
+
+    @staticmethod
+    def get_all_payment_information(hotel_id):
+        hotel = HotelRepository.get_by(id=hotel_id)
+        if hotel is None:
+            raise HotelNotFoundException
+        return list(hotel.payment_informations)
