@@ -15,6 +15,7 @@ class HotelCamelKey(BaseCamelKey):
     mapping = {
         'is_active': 'isActive',
         'city_or_province': 'cityOrProvince',
+        'room_types': 'roomTypes',
         'check_in': 'checkin',
         'check_out': 'checkout',
         'phone_number': 'phoneNumber',

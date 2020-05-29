@@ -1,19 +1,25 @@
 from marshmallow import Schema, post_load, EXCLUDE
-from marshmallow.fields import Nested, List, Integer, String, Date, Float
+from marshmallow.fields import Nested, List, Integer, String, Date, Float, Boolean, DateTime, Method
 from main.helpers.validators.validate import (
     ValidateLength,
     ValidateNumbersOnly,
     ValidateList,
-    ValidateEmail
+    ValidateEmail,
+    ValidateRange
 )
 from main.helpers.utils.camel_key_mapping import HotelCamelKey
 from main.helpers.utils.string import StringUtils
-from .base import BaseRequestSchema
+from .base import (
+    BaseRequestSchema,
+    BaseResponseSchema
+)
 
 class HotelCreateRequestSchema(BaseRequestSchema):
     name = String(required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
+
+    is_active = Boolean(data_key=HotelCamelKey.mapping['is_active'], required=True)
 
     description = String(required=True, validate=[
         ValidateLength(min=1, max=1000)
@@ -31,23 +37,23 @@ class HotelCreateRequestSchema(BaseRequestSchema):
 
     latitude = Float(required=True)
 
-    check_in = Date(format='%H:%M', data_key=HotelCamelKey.mapping['check_in'], required=True)
+    checkin = DateTime(format='%H:%M', required=True)
 
-    check_out = Date(format='%H:%M', data_key=HotelCamelKey.mapping['check_out'], required=True)
+    checkout = DateTime(format='%H:%M', required=True)
 
-    utilities = List(String(), required=True, validate=[
-        ValidateList()
+    utilities = String(required=True, validate=[
+        ValidateLength(min=1, max=255)
     ])
 
-    roomTypes = List(String(), required=True, validate=[
-        ValidateList()
+    room_types = String(data_key=HotelCamelKey.mapping['room_types'], required=True, validate=[
+        ValidateLength(min=1, max=255)
     ])
 
     phone_number = String(data_key=HotelCamelKey.mapping['phone_number'], required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
 
-    email = String(validate=[
+    email = String(required=True, validate=[
         ValidateLength(min=1, max=255),
         ValidateEmail()
     ])
@@ -76,4 +82,80 @@ class HotelCreateRequestSchema(BaseRequestSchema):
             if field not in data:
                 continue
             data[field] = StringUtils.remove_duplicate_space(data[field])
+        data['checkin'] = data.get('checkin').strftime('%H:%M:%S')
+        data['checkout'] = data.get('checkout').strftime('%H:%M:%S')
         return data
+
+
+class HotelsGetRequestSchema(Schema):
+    page = Integer(default=1, missing=1, validate=[
+        ValidateRange(min=1)
+    ])
+
+    page_size = Integer(data_key='pageSize', default=10, missing=10, validate=[
+        ValidateRange(min=1, max=200)
+    ])
+
+    is_active = Integer(data_key='isActive', validate=[
+        ValidateRange(min=0, max=1)
+    ])
+
+    query = String()
+
+
+class HotelSchema(Schema):
+    id = Integer(required=True)
+    name = String(required=True)
+    is_active = Boolean(data_key=HotelCamelKey.mapping['is_active'], required=True)
+    description = String(required=True)
+    city_or_province = String(data_key=HotelCamelKey.mapping['city_or_province'], required=True)
+    address = String(required=True)
+    longitude = Float(required=True)
+    latitude = Float(required=True)
+    checkin = DateTime(format='%H:%M', required=True)
+    checkout = DateTime(format='%H:%M', required=True)
+    utilities = Method(serialize='get_utilities')
+    room_types = Method(serialize='get_room_types', data_key=HotelCamelKey.mapping['room_types'])
+    phone_number = String(data_key=HotelCamelKey.mapping['phone_number'], required=True)
+    email = String(required=True)
+    image = String(required=True)
+    price_standard = Float()
+    available_room_standard = Integer(data_key=HotelCamelKey.mapping['available_room_standard'])
+    tax_standard = Float(data_key=HotelCamelKey.mapping['tax_standard'])
+    image_standard = String(data_key=HotelCamelKey.mapping['image_standard'])
+    price_deluxe = Float(data_key=HotelCamelKey.mapping['price_deluxe'])
+    available_room_deluxe = Integer(data_key=HotelCamelKey.mapping['available_room_deluxe'], allow_none=True)
+    tax_deluxe = Float(data_key=HotelCamelKey.mapping['tax_deluxe'])
+    image_deluxe = String(data_key=HotelCamelKey.mapping['image_deluxe'])
+
+    def get_utilities(self, obj):
+        utilities = obj.utilities
+        if utilities is not None:
+            utilities = utilities.split(',')
+        return utilities
+
+    def get_room_types(self, obj):
+        room_types = obj.room_types
+        if room_types is not None:
+            room_types = room_types.split(',')
+        return room_types
+
+
+class HotelsGetResponseSchema(BaseResponseSchema):
+    page = Integer(required=True)
+    page_size = Integer(data_key='pageSize', required=True, validate=[
+        ValidateRange(min=1, max=200)
+    ])
+    total = Integer(required=True)
+    hotels = Nested(HotelSchema(many=True))
+
+
+class HotelsSearchRequestSchema(BaseRequestSchema):
+    city_or_province = String(data_key=HotelCamelKey.mapping['city_or_province'], required=True, validate=[
+        ValidateLength(min=1, max=10)
+    ])
+
+
+class HotelsSearchResponseSchema(BaseResponseSchema):
+    total = Integer(required=True)
+    hotels = Nested(HotelSchema(many=True))
