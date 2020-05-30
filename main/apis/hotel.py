@@ -10,9 +10,10 @@ from .schemas.hotel import (
     HotelsSearchRequestSchema,
     HotelsSearchResponseSchema,
     HotelPaymentInformationsResponseSchema,
-    HotelResponseSchema
+    HotelResponseSchema,
+    HotelUpdateRequestSchema
 )
-from .schemas.base import IdOnlySchema
+from .schemas.base import IdOnlySchema, BaseResponseSchema
 from main.services.hotel import HotelsService
 from main.services.payment_information import PaymentInformationsService
 
@@ -41,13 +42,24 @@ class Hotels(Resource):
         return HotelsService.get_all_by(request.parse_args)
 
 
-@api.route('/<int:hotel_id>', methods=['GET'])
+@api.route('/<int:hotel_id>', methods=['GET', 'PATCH'])
 class Hotel(Resource):
     @responds(schema=HotelResponseSchema)
     def get(self, hotel_id):
         return {
             'hotel': HotelsService.get_by(hotel_id=hotel_id)
         }
+
+    @accepts(schema=HotelUpdateRequestSchema)
+    @responds(schema=BaseResponseSchema)
+    def patch(self, hotel_id):
+        payload = request.parse_obj
+        HotelsService.update_by(hotel_id, **payload)
+
+        return BaseResponseSchema(context={
+            'code': APICode.UPDATE_SUCCESS,
+            'message': APICode.UPDATE_SUCCESS.description
+        })
 
 
 @api.route('/search', methods=['GET'])

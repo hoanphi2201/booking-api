@@ -89,6 +89,80 @@ class HotelCreateRequestSchema(BaseRequestSchema):
         return data
 
 
+class HotelUpdateRequestSchema(BaseRequestSchema):
+    name = String(required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+    is_active = Boolean(data_key=HotelCamelKey.mapping['is_active'], required=False)
+    description = String(required=False, validate=[
+        ValidateLength(min=1, max=1000)
+    ])
+
+    city_or_province = String(data_key=HotelCamelKey.mapping['city_or_province'], required=False, validate=[
+        ValidateLength(min=1, max=10)
+    ])
+
+    address = String(required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    longitude = Float(required=False)
+
+    latitude = Float(required=False)
+
+    checkin = DateTime(format='%H:%M', required=False)
+
+    checkout = DateTime(format='%H:%M', required=False)
+
+    utilities = String(required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    room_types = String(data_key=HotelCamelKey.mapping['room_types'], required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    phone_number = String(data_key=HotelCamelKey.mapping['phone_number'], required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    email = String(required=False, validate=[
+        ValidateLength(min=1, max=255),
+        ValidateEmail()
+    ])
+
+    image = String(required=False, validate=[
+        ValidateLength(min=1, max=255)
+    ])
+
+    price_standard = Float(data_key=HotelCamelKey.mapping['price_standard'], required=False, allow_none=True)
+    available_room_standard = Integer(data_key=HotelCamelKey.mapping['available_room_standard'], required=False, allow_none=True)
+    tax_standard = Float(data_key=HotelCamelKey.mapping['tax_standard'], required=False, allow_none=True)
+    image_standard = String(data_key=HotelCamelKey.mapping['image_standard'], validate=[
+        ValidateLength(min=1, max=255)
+    ], required=False, allow_none=True)
+
+    price_deluxe = Float(data_key=HotelCamelKey.mapping['price_deluxe'], required=False, allow_none=True)
+    available_room_deluxe = Integer(data_key=HotelCamelKey.mapping['available_room_deluxe'], required=False, allow_none=True)
+    tax_deluxe = Float(data_key=HotelCamelKey.mapping['tax_deluxe'], required=False, allow_none=True)
+    image_deluxe = String(data_key=HotelCamelKey.mapping['image_deluxe'], validate=[
+        ValidateLength(min=1, max=255)
+    ], required=False, allow_none=True)
+
+    @post_load()
+    def refine_data(self, data, **kwargs):
+        for field in ['name', 'email', 'phone_number']:
+            if field not in data:
+                continue
+            if data[field]:
+                data[field] = StringUtils.remove_duplicate_space(data[field])
+        if data.get('checkin'):
+            data['checkin'] = data.get('checkin').strftime('%H:%M:%S')
+        if data.get('checkin'):
+            data['checkout'] = data.get('checkout').strftime('%H:%M:%S')
+        return data
+
+
 class HotelsGetRequestSchema(Schema):
     page = Integer(default=1, missing=1, validate=[
         ValidateRange(min=1)
@@ -121,7 +195,7 @@ class HotelSchema(Schema):
     phone_number = String(data_key=HotelCamelKey.mapping['phone_number'], required=True)
     email = String(required=True)
     image = String(required=True)
-    price_standard = Float()
+    price_standard = Float(data_key=HotelCamelKey.mapping['price_standard'])
     available_room_standard = Integer(data_key=HotelCamelKey.mapping['available_room_standard'])
     tax_standard = Float(data_key=HotelCamelKey.mapping['tax_standard'])
     image_standard = String(data_key=HotelCamelKey.mapping['image_standard'])
@@ -192,4 +266,4 @@ class HotelPaymentInformationSchema(Schema):
 
 
 class HotelPaymentInformationsResponseSchema(BaseResponseSchema):
-    payment_informations = Nested(HotelPaymentInformationSchema(many=True))
+    payment_informations = Nested(data_key='paymentInformations', nested=HotelPaymentInformationSchema(many=True))

@@ -99,14 +99,14 @@ class HotelBookingSchema(Schema):
     guest_email = String(data_key='guestEmail')
     bank_code = String(data_key='bankCode')
     painded = Integer()
-    image = String()
+    image_witness = String(data_key='imageWitness')
 
 class HotelBookingWithNestedHotelSchema(HotelBookingSchema):
     hotel = Nested(nested=HotelSchema(many=False))
 
 
 class HotelBookingWithHotelSchema(HotelBookingSchema):
-    hotel_booking = Nested(HotelBookingWithNestedHotelSchema)
+    hotel_booking = Nested(nested=HotelBookingWithNestedHotelSchema)
 
 
 class HotelBookingsGetResponseSchema(BaseResponseSchema):
@@ -115,4 +115,10 @@ class HotelBookingsGetResponseSchema(BaseResponseSchema):
         ValidateRange(min=1, max=200)
     ])
     total = Integer(required=True)
-    hotel_bookings = Nested(HotelBookingSchema(many=True))
+    hotel_bookings = Nested(data_key='hotelBookings', nested=HotelBookingWithNestedHotelSchema(many=True))
+
+
+class HotelBookingUpdateRequestSchema(BaseRequestSchema):
+    status = String(required=False)
+    paided = Integer(required=False, allow_none=True)
+    image_witness = String(data_key='imageWitness', required=False, allow_none=True)
