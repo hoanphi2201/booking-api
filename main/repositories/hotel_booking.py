@@ -74,3 +74,13 @@ class HotelBookingRepository:
             'page': temp.get('page'),
             'page_size': temp.get('page_size')
         }
+
+    @staticmethod
+    def update_by(booking_id: int, **payload):
+        HotelBooking.query.filter_by(
+            id=booking_id
+        ).update(
+            {**payload}
+        )
+        db.session.commit()
+        return HotelBookingRepository.get_by(id=booking_id)

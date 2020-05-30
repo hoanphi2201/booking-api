@@ -31,3 +31,7 @@ class HotelBookingService:
             'page': result.get('page'),
             'page_size': result.get('page_size')
         }
+
+    @staticmethod
+    def update_by(booking_id: int, **payload):
+        HotelBookingRepository.update_by(booking_id, **payload)

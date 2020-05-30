@@ -7,21 +7,33 @@ from .schemas.hotel_booking import (
     HotelBookingCreateRequestSchema,
     HotelBookingWithHotelSchema,
     HotelBookingsGetRequestSchema,
-    HotelBookingsGetResponseSchema
+    HotelBookingsGetResponseSchema,
+    HotelBookingUpdateRequestSchema
 )
-from .schemas.base import IdOnlySchema
+from .schemas.base import IdOnlySchema, BaseResponseSchema
 from main.services.hotel_booking import HotelBookingService
 
 api = Namespace('Hotel Bookings')
 
 
-@api.route('/<int:booking_id>', methods=['GET'])
+@api.route('/<int:booking_id>', methods=['GET', 'PATCH'])
 class HotelBooking(Resource):
     @responds(schema=HotelBookingWithHotelSchema)
     def get(self, booking_id):
         return {
             'hotel_booking': HotelBookingService.get_by(booking_id)
         }
+
+    @accepts(schema=HotelBookingUpdateRequestSchema)
+    @responds(schema=BaseResponseSchema)
+    def patch(self, booking_id):
+        payload = request.parse_obj
+        HotelBookingService.update_by(booking_id, **payload)
+
+        return BaseResponseSchema(context={
+            'code': APICode.UPDATE_SUCCESS,
+            'message': APICode.UPDATE_SUCCESS.description
+        })
 
 
 @api.route('', methods=['POST', 'GET'])

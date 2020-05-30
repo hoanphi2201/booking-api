@@ -3,8 +3,8 @@ from .base import BaseEnumModel
 
 
 class Bank(BaseEnumModel):
-    VIETINBANK = 'vietinbank'
-    VIETCOMBANK = 'vietcombank'
-    TPBANK = 'tpbank'
-    BIDV = 'bidv'
-    ACB = 'acb'
+    VIETINBANK = 'VIETINBANK'
+    VIETCOMBANK = 'VIETCOMBANK'
+    TPBANK = 'TPBANK'
+    BIDV = 'BIDV'
+    ACB = 'ACB'
