@@ -24,7 +24,7 @@ def accepts(schema: Schema = None, many=False, has_request_params=False):
                     obj = schema.load(request.get_json())
                     request.parse_obj = obj
                 except ValidationError as err:
-                    raise PhysicalValidationException(extra=err.messages)
+                    raise PhysicalValidationException()
 
             return func(*args, **kwargs)
 
