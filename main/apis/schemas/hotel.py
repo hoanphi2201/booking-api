@@ -47,7 +47,7 @@ class HotelCreateRequestSchema(BaseRequestSchema):
         ValidateLength(min=1, max=255)
     ])
 
-    room_types = String(data_key=HotelCamelKey.mapping['room_types'], required=True, validate=[
+    room_types = String(data_key='room_types', required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
 
@@ -175,6 +175,8 @@ class HotelsGetRequestSchema(Schema):
     is_active = Integer(data_key='isActive', validate=[
         ValidateRange(min=0, max=1)
     ])
+
+    city_or_province = String(data_key='cityOrProvince')
 
     query = String()
 
