@@ -269,3 +269,11 @@ class HotelPaymentInformationSchema(Schema):
 
 class HotelPaymentInformationsResponseSchema(BaseResponseSchema):
     payment_informations = Nested(data_key='paymentInformations', nested=HotelPaymentInformationSchema(many=True))
+    
+
+class HotelWithPaymentSchema(HotelSchema):
+    payment_informations = Nested(data_key='paymentInformations', nested=HotelPaymentInformationSchema(many=True))
+
+
+class HotelResponseWithPaymentSchema(BaseResponseSchema):
+    hotel = Nested(HotelWithPaymentSchema)
