@@ -11,7 +11,8 @@ from .schemas.hotel import (
     HotelsSearchResponseSchema,
     HotelPaymentInformationsResponseSchema,
     HotelResponseSchema,
-    HotelUpdateRequestSchema
+    HotelUpdateRequestSchema,
+    HotelResponseWithPaymentSchema
 )
 from .schemas.base import IdOnlySchema, BaseResponseSchema
 from main.services.hotel import HotelsService
@@ -44,7 +45,7 @@ class Hotels(Resource):
 
 @api.route('/<int:hotel_id>', methods=['GET', 'PATCH'])
 class Hotel(Resource):
-    @responds(schema=HotelResponseSchema)
+    @responds(schema=HotelResponseWithPaymentSchema)
     def get(self, hotel_id):
         return {
             'hotel': HotelsService.get_by(hotel_id=hotel_id)

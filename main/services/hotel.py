@@ -14,6 +14,7 @@ class HotelsService:
         hotel = HotelRepository.get_by(id=hotel_id)
         if hotel is None:
             raise HotelNotFoundException
+        hotel.payment_informations = hotel.payment_informations
         return hotel
 
 
