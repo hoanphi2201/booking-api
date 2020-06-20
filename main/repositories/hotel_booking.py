@@ -28,16 +28,21 @@ class HotelBookingRepository:
     @staticmethod
     def common_paginate_query(queryset, descending=True, **kwargs):
         query = queryset
-        if kwargs.get('name_or_email'):
-            _like_expr = '%{}%'.format(kwargs.get('name_or_email'))
+        if kwargs.get('query'):
+            _like_expr = '%{}%'.format(kwargs.get('query'))
 
             query = query.filter(
                 or_(
-                    HotelBooking.guess_name.ilike(_like_expr),
-                    HotelBooking.guest_email.ilike(_like_expr)
+                    HotelBooking.guest_name.ilike(_like_expr),
+                    HotelBooking.guest_email.ilike(_like_expr),
+                    HotelBooking.guest_phone_number.ilike(_like_expr)
                 )
             )
 
+        user_id = kwargs.get('user_id')
+        if user_id:
+            query = query.filter(HotelBooking.user_id.ilike(user_id))
+        
         for key in ['status']:
             if kwargs.get(key):
                 query = query.filter(getattr(HotelBooking, key).in_(kwargs.get(key)))
