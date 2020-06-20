@@ -22,6 +22,7 @@ class HotelBooking(db.Model, TimestampMixin, IDMixin):
     bank_code = db.Column(db.Enum(Bank), nullable=True)
     paided = db.Column(db.INTEGER, nullable=True)
     image_witness = db.Column(db.VARCHAR(255), nullable=True)
+    grand_total = db.Column(db.INTEGER, nullable=False)
 
     hotel_id = db.Column(
         db.Integer,

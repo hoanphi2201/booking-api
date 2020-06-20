@@ -34,6 +34,7 @@ class HotelBookingCreateRequestSchema(BaseRequestSchema):
     guests = Integer(required=True)
     room_price = Integer(data_key='roomPrice', required=True)
     room_tax = Float(data_key='roomTax', required=True)
+    grand_total = Integer(data_key='grandTotal', required=True)
     guest_name = String(data_key='guestName', required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
@@ -68,7 +69,9 @@ class HotelBookingsGetRequestSchema(Schema):
         ValidateEnum(BookingStatus)
     ])
 
-    name_or_email = String(data_key='nameOrEmail')
+    query = String()
+
+    user_id = String(data_key='userId')
 
     @post_load()
     def refine_data(self, data, **kwargs):
@@ -94,6 +97,7 @@ class HotelBookingSchema(Schema):
     guests = Integer()
     room_price = Integer(data_key='roomPrice')
     room_tax = Float(data_key='roomTax')
+    grand_total = Integer(data_key='grandTotal')
     guest_name = String(data_key='guestName')
     guest_phone_number = String(data_key='guestPhoneNumber')
     guest_email = String(data_key='guestEmail')
@@ -119,6 +123,6 @@ class HotelBookingsGetResponseSchema(BaseResponseSchema):
 
 
 class HotelBookingUpdateRequestSchema(BaseRequestSchema):
-    status = String(required=False)
+    status = String(required=False, allow_none=True)
     paided = Integer(required=False, allow_none=True)
     image_witness = String(data_key='imageWitness', required=False, allow_none=True)
