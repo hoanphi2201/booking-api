@@ -47,7 +47,7 @@ class TourCreateRequestSchema(BaseRequestSchema):
     organizer_name = String(data_key='organizerName', required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
-    organizer_phome_number = String(data_key='organizerPhoneNumber', required=True, validate=[
+    organizer_phone_number = String(data_key='organizerPhoneNumber', required=True, validate=[
         ValidateLength(min=1, max=255)
     ])
     organizer_email = String(data_key='organizerEmail', required=True, validate=[
@@ -90,7 +90,7 @@ class TourUpdateRequestSchema(BaseRequestSchema):
     organizer_name = String(data_key='organizerName', required=False, validate=[
         ValidateLength(min=1, max=255)
     ])
-    organizer_phome_number = String(data_key='organizerPhoneNumber', required=False, validate=[
+    organizer_phone_number = String(data_key='organizerPhoneNumber', required=False, validate=[
         ValidateLength(min=1, max=255)
     ])
     organizer_email = String(data_key='organizerEmail', required=False, validate=[
