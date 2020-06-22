@@ -14,3 +14,5 @@ def init_app(app, **kwargs):
 from .hotel import Hotel
 from .payment_information import PaymentInformation
 from .hotel_booking import HotelBooking
+from .tour import Tour
+from .tour_payment_information import TourPaymentInformation
