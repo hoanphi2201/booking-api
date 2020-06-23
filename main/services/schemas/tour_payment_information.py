@@ -4,5 +4,5 @@ from main.helpers.validators.tour import TourValidator
 class TourPaymentInformationCreate(Schema):
     @validates_schema
     def tour_id(self, payload, **kwargs):
-        hotel = TourValidator.validate_non_existence(field_name='tour_id', id=payload.get('tour_id'))
+        tour = TourValidator.validate_non_existence(field_name='tour_id', id=payload.get('tour_id'))
         payload['temp']['tour'] = tour
