@@ -129,6 +129,7 @@ class TourSchema(Schema):
     duration = Integer(required=True)
     min_size = Integer(data_key='minSize', required=True)
     max_size = Integer(data_key='maxSize', required=True)
+    price_per_participant = Integer(data_key='pricePerParticipant', required=True)
     transportations = Method(serialize='get_transportations')
     images = Method(serialize='get_images')
     organizer_name = String(data_key='organizerName', required=True)
