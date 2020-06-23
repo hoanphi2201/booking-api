@@ -71,7 +71,7 @@ class ToursSearch(Resource):
         return ToursService.get_all_by(request.parse_args, paginate=False)
 
 
-@api.route('/<int:hotel_id>/payment/get-all', methods=['GET'])
+@api.route('/<int:tour_id>/payment/get-all', methods=['GET'])
 class TOurPaymentInformations(Resource):
     @responds(schema=TourPaymentInformationsResponseSchema)
     def get(self, tour_id):
