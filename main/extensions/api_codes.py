@@ -57,6 +57,8 @@ class APICode(str, Enum):
 
     TOUR_NOT_FOUND = ("SA013E", "The requested tour can not be found")
 
+    TOUR_BOOKING_NOT_FOUND = ("SA011E", "The requested tour booking can not be found")
+
     TERMINAL_ALREADY_ACTIVE = ("SA031E", "The requested terminal has already active")
     
     TERMINAL_ALREADY_INACTIVE = ("SA032E", "The requested terminal has already inactive")

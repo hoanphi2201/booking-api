@@ -26,5 +26,10 @@ class Tour(db.Model, TimestampMixin, IDMixin):
         back_populates='tour'
     )
 
+    tour_bookings = db.relationship(
+        'TourBooking',
+        back_populates='tour'
+    )
+
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
