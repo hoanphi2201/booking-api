@@ -16,3 +16,4 @@ from .payment_information import PaymentInformation
 from .hotel_booking import HotelBooking
 from .tour import Tour
 from .tour_payment_information import TourPaymentInformation
+from .tour_booking import TourBooking
